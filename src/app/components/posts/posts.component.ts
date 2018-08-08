@@ -33,38 +33,38 @@ export class PostsComponent implements OnInit {
     this.postsService.getPosts()
       .subscribe((request: Post[]) => {
         this.posts = request;
-
         this.spinner.hide();
-
         console.log("PostsComponent -> ngOnInit -> fetched posts : ", request);
       },
-        error => console.error("PostsComponent -> ngOnInit -> error fetching posts from server.", error.message)
+        error => { 
+          this.spinner.hide();
+          console.error("PostsComponent -> ngOnInit -> error fetching posts from server.", error.message) 
+        }
       );
   }
 
   public getPostComments(post: Post) {
 
-    if (post.comments) {
-      post.comments = null;
-    } else {
+    // if (post.comments) {
+    //   post.comments = null;
+    // } else {
 
-      this.spinner.show();
+    //   this.spinner.show();
 
-      this.commentsService.getComments(post.id)
-        .subscribe((request: Comment[]) => {
-          post.comments = request;
-
-          this.spinner.hide();
-
-          console.log("PostsComponent -> getPostComments -> post comments with id: ", post.id, " was fetched. ", request);
-        },
-          error => {
-            this.toastr.error("Can not fetch comments from server", "Error", { timeOut: 3000 });
-            console.error("PostsComponent -> getPostComments -> post comments with id: ",
-              post.id, " was not fetched. ", error.message)
-          }
-        );
-    }
+    //   this.commentsService.getComments(post.id)
+    //     .subscribe((request: Comment[]) => {
+    //       post.comments = request;
+    //       this.spinner.hide();
+    //       console.log("PostsComponent -> getPostComments -> post comments with id: ", post.id, " was fetched. ", request);
+    //     },
+    //       error => {
+    //         this.spinner.hide();
+    //         this.toastr.error("Can not fetch comments from server", "Error", { timeOut: 3000 });
+    //         console.error("PostsComponent -> getPostComments -> post comments with id: ",
+    //           post.id, " was not fetched. ", error.message)
+    //       }
+    //     );
+    // }
   }
 
   public onDelete(post: Post) {
@@ -74,13 +74,12 @@ export class PostsComponent implements OnInit {
     this.postsService.deletePost(post.id)
       .subscribe((data: Object) => {
         this.posts = this.posts.filter(filteredPost => filteredPost.id != post.id);
-
         this.spinner.hide();
-
         this.toastr.success("Post was successfully deleted", "Info", { timeOut: 3000 });
         console.log("PostsComponent -> onDelete -> post with id: ", post.id, " was deleted. ", data);
       },
         error => {
+          this.spinner.hide();
           this.toastr.error("Post was not deleted", "Error", { timeOut: 3000 });
           console.error("PostsComponent -> onDelete -> post with id: ", post.id, " was not deleted. ", error.message)
         }
@@ -103,15 +102,13 @@ export class PostsComponent implements OnInit {
       .subscribe((request: Post) => {
         clonedPost.id = request.id;
         this.posts.push(clonedPost);
-
         form.resetForm();
-
         this.spinner.hide();
-
         this.toastr.success("New post was successfully created", "Info", { timeOut: 3000 });
         console.log("PostsComponent -> onSubmit -> new post was created on server. ", request);
       },
         error => {
+          this.spinner.hide();
           this.toastr.error("New post was not created", "Error", { timeOut: 3000 });
           console.error("PostsComponent -> onSubmit -> error creating new post on server. ", error.message);
         }
