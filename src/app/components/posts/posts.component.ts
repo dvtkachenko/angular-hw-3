@@ -45,26 +45,26 @@ export class PostsComponent implements OnInit {
 
   public getPostComments(post: Post) {
 
-    // if (post.comments) {
-    //   post.comments = null;
-    // } else {
+    if (post.comments) {
+      post.comments = null;
+    } else {
 
-    //   this.spinner.show();
+      this.spinner.show();
 
-    //   this.commentsService.getComments(post.id)
-    //     .subscribe((request: Comment[]) => {
-    //       post.comments = request;
-    //       this.spinner.hide();
-    //       console.log("PostsComponent -> getPostComments -> post comments with id: ", post.id, " was fetched. ", request);
-    //     },
-    //       error => {
-    //         this.spinner.hide();
-    //         this.toastr.error("Can not fetch comments from server", "Error", { timeOut: 3000 });
-    //         console.error("PostsComponent -> getPostComments -> post comments with id: ",
-    //           post.id, " was not fetched. ", error.message)
-    //       }
-    //     );
-    // }
+      this.commentsService.getComments(post.id)
+        .subscribe((request: Comment[]) => {
+          post.comments = request;
+          this.spinner.hide();
+          console.log("PostsComponent -> getPostComments -> post comments with id: ", post.id, " was fetched. ", request);
+        },
+          error => {
+            this.spinner.hide();
+            this.toastr.error("Can not fetch comments from server", "Error", { timeOut: 3000 });
+            console.error("PostsComponent -> getPostComments -> post comments with id: ",
+              post.id, " was not fetched. ", error.message)
+          }
+        );
+    }
   }
 
   public onDelete(post: Post) {
