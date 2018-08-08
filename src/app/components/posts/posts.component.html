@@ -1,0 +1,71 @@
+<div class="container mt-4">
+
+  <!-- TODO it works in not proper way just when we are at the beginning page -->
+  <ngx-spinner type="ball-atom" loadingText="Processing ...">
+  </ngx-spinner>
+
+  <div class="card mb-5">
+    <div class="card-body">
+      <form novalidate (ngSubmit)="onSubmit(form)" #form="ngForm">
+
+        <div class="form-group">
+          <label for="userId">User Id</label>
+          <input type="number" id="userId" class="form-control" [(ngModel)]="newPost.userId" name="userId" #userId="ngModel" [ngClass]="{ 'is-invalid': userId.invalid && form.submitted }"
+            required pattern="[0-9]{1,2}">
+          <div class="invalid-feedback" [hidden]="!userId.errors?.required">
+            User Id can not be empty
+          </div>
+          <div class="invalid-feedback" [hidden]="!userId.errors?.pattern">
+            Please provide a valid user Id
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" class="form-control" [(ngModel)]="newPost.title" name="title" #title="ngModel" [ngClass]="{ 'is-invalid': title.invalid && form.submitted }"
+            required>
+          <div class="invalid-feedback">
+            Title can not be empty
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="body">Body</label>
+          <textarea id="body" class="form-control" [(ngModel)]="newPost.body" name="body" #body="ngModel" [ngClass]="{ 'is-invalid': body.invalid && form.submitted }"
+            required>
+          </textarea>
+          <div class="invalid-feedback">
+            Body can not be empty
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col col-12 mb-3" *ngFor="let post of posts">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"> {{ post.title }} </h5>
+          <p class="card-text"> {{ post.body }} </p>
+
+          <button class="btn btn-outline-info m-1" (click)="getPostComments(post)">
+            {{ post.comments ? 'Hide comments' : 'Show comments' }}
+          </button>
+          <button class="btn btn-outline-danger m-1" *ngIf="isAdmin" (click)="onDelete(post)">Delete post</button>
+
+          <div class="mt-3" *ngIf="post.comments">
+            <h5 class="pb-2"> Comments </h5>
+            <div class="card-text mb-2" *ngFor="let comment of post.comments; let i=index">
+              <h6> Comment {{ i+1 }} </h6>
+              <p> Name : {{ comment.name }}</p>
+              <p> Email : {{ comment.email }}</p>
+              <p> Body : {{ comment.body }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
